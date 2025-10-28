@@ -7,54 +7,311 @@
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg1:#0d1323;--accent1:#00d8d6;--accent2:#ff6b6b;--panel:#0a0f20;--muted:#e2e8f0;
+      --bg1:#0d1323;
+      --accent1:#00d8d6;
+      --accent2:#ff6b6b;
+      --panel:#0a0f20;
+      --muted:#e2e8f0;
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Baloo 2',cursive;background:linear-gradient(180deg,var(--bg1),#0f172a);color:var(--muted);overflow-x:hidden;}
-    header{text-align:center;padding-top:2rem;animation:fadeIn 2s ease forwards;}
-    #title{font-size:2.8rem;color:var(--accent2);text-shadow:0 0 20px rgba(255,107,107,.6)}
-    #subtitle{color:var(--accent1);opacity:.9;margin-top:.3rem;font-size:1.1rem}
-    #countdown{margin-top:1rem;background:rgba(255,255,255,.05);display:inline-block;padding:.6rem 1rem;border-radius:10px;}
+    
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+    
+    body{
+      font-family:'Baloo 2',cursive;
+      background:linear-gradient(180deg,var(--bg1),#0f172a);
+      color:var(--muted);
+      overflow-x:hidden;
+    }
+    
+    header{
+      text-align:center;
+      padding-top:2rem;
+      animation:fadeIn 2s ease forwards;
+    }
+    
+    #title{
+      font-size:2.8rem;
+      color:var(--accent2);
+      text-shadow:0 0 20px rgba(255,107,107,.6);
+    }
+    
+    #subtitle{
+      color:var(--accent1);
+      opacity:.9;
+      margin-top:.3rem;
+      font-size:1.1rem;
+    }
+    
+    #countdown{
+      margin-top:1rem;
+      background:rgba(255,255,255,.05);
+      display:inline-block;
+      padding:.6rem 1rem;
+      border-radius:10px;
+    }
 
-    .wrap{display:flex;flex-direction:column;align-items:center;min-height:100vh;}
-.gift-wrap {
-  margin: 3rem 0;
-  text-align: center;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-}
-    .box{width:180px;height:160px;border-radius:18px;background:linear-gradient(180deg,#0b2a33,#0f3240);position:relative;cursor:pointer;box-shadow:0 10px 40px rgba(0,0,0,.6);transition:transform .3s ease;animation:bounce 3s infinite;}
-    .box:hover{transform:scale(1.05)}
-    .lid{position:absolute;top:-30px;left:calc(50% - 90px);width:180px;height:45px;border-radius:12px;background:linear-gradient(180deg,var(--accent1),#0899a3);transform-origin:bottom center;transition:transform .7s ease;}
-    .box.open .lid{transform:rotateX(-120deg)}
-    .ribbon{position:absolute;left:50%;top:0;transform:translateX(-50%);width:20px;height:100%;background:linear-gradient(180deg,var(--accent2),#b34343);border-radius:8px}
+    .wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      min-height:100vh;
+      padding-bottom:3rem;
+    }
+    
+    .gift-wrap {
+      margin: 3rem 0;
+      text-align: center;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+    }
+    
+    .box{
+      width:180px;
+      height:160px;
+      border-radius:18px;
+      background:linear-gradient(180deg,#0b2a33,#0f3240);
+      position:relative;
+      cursor:pointer;
+      box-shadow:0 10px 40px rgba(0,0,0,.6);
+      transition:transform .3s ease;
+      animation:bounce 3s infinite;
+      pointer-events:none;
+      opacity:0.3;
+    }
+    
+    .box.clickable{
+      pointer-events:auto;
+      cursor:pointer;
+      opacity:1;
+    }
+    
+    .box:hover{
+      transform:scale(1.05);
+    }
+    
+    .lid{
+      position:absolute;
+      top:-30px;
+      left:calc(50% - 90px);
+      width:180px;
+      height:45px;
+      border-radius:12px;
+      background:linear-gradient(180deg,var(--accent1),#0899a3);
+      transform-origin:bottom center;
+      transition:transform .7s ease;
+    }
+    
+    .box.open .lid{
+      transform:rotateX(-120deg);
+    }
+    
+    .ribbon{
+      position:absolute;
+      left:50%;
+      top:0;
+      transform:translateX(-50%);
+      width:20px;
+      height:100%;
+      background:linear-gradient(180deg,var(--accent2),#b34343);
+      border-radius:8px;
+    }
 
-    .message{max-width:820px;padding:1.2rem 1.4rem;border-radius:14px;background:rgba(255,255,255,.05);box-shadow:0 0 30px rgba(0,0,0,.6);margin-top:1rem;opacity:0;transform:translateY(30px);transition:opacity 1s ease,transform 1s ease;}
-    .message.visible{opacity:1;transform:none;animation:popIn 1s ease forwards;}
+    .message{
+      max-width:820px;
+      padding:1.2rem 1.4rem;
+      border-radius:14px;
+      background:rgba(255,255,255,.05);
+      box-shadow:0 0 30px rgba(0,0,0,.6);
+      margin-top:1rem;
+      opacity:0;
+      transform:translateY(30px);
+      transition:opacity 1s ease,transform 1s ease;
+    }
+    
+    .message.visible{
+      opacity:1;
+      transform:none;
+      animation:popIn 1s ease forwards;
+    }
 
-    .dates{width:100%;max-width:920px;margin-top:2rem;display:none;animation:fadeInUp 1.5s ease forwards;}
-    .date-item{background:rgba(255,255,255,.05);padding:1rem 1.2rem;border-radius:14px;margin-bottom:1rem;border:1px solid rgba(255,255,255,.06);transition:transform .4s ease,box-shadow .4s ease;}
-    .date-item:hover{transform:translateY(-5px);box-shadow:0 0 20px rgba(0,0,0,.4);}
-    .date-item h4{color:var(--accent2);margin-bottom:.5rem}
-    .meta{color:var(--accent1);font-weight:bold;margin-bottom:.5rem}
+    .dates{
+      width:100%;
+      max-width:920px;
+      margin-top:2rem;
+      opacity:0;
+      transform:translateY(40px);
+      pointer-events:none;
+      transition:opacity 1s ease,transform 1s ease;
+    }
+    
+    .dates.visible{
+      opacity:1;
+      transform:none;
+      pointer-events:auto;
+    }
+    
+    .date-item{
+      background:rgba(255,255,255,.05);
+      padding:1rem 1.2rem;
+      border-radius:14px;
+      margin-bottom:1rem;
+      border:1px solid rgba(255,255,255,.06);
+      transition:transform .4s ease,box-shadow .4s ease;
+    }
+    
+    .date-item:hover{
+      transform:translateY(-5px);
+      box-shadow:0 0 20px rgba(0,0,0,.4);
+    }
+    
+    .date-item h4{
+      color:var(--accent2);
+      margin-bottom:.5rem;
+    }
+    
+    .meta{
+      color:var(--accent1);
+      font-weight:bold;
+      margin-bottom:.5rem;
+    }
+    
+    .event-elapsed{
+      background:rgba(0,216,214,.1);
+      padding:.5rem;
+      border-radius:8px;
+      margin-top:.5rem;
+      font-size:.9rem;
+      color:var(--accent1);
+      font-weight:bold;
+    }
 
-    .scroll-hint{opacity:0.8;margin:2rem 0;font-size:.95rem;animation:pulse 2s infinite;}
+    .scroll-hint{
+      opacity:0;
+      margin:2rem 0;
+      font-size:.95rem;
+      animation:pulse 2s infinite;
+      transition:opacity .5s ease;
+    }
+    
+    .scroll-hint.visible{
+      opacity:0.8;
+    }
 
-    canvas#confetti{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;}
+    canvas#confetti{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+      z-index:999;
+    }
 
-    @keyframes fadeIn{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:none;}}
-    @keyframes fadeInUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:none;}}
-    @keyframes popIn{0%{transform:scale(0.8);opacity:0;}100%{transform:scale(1);opacity:1;}}
-    @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
-    @keyframes pulse{0%,100%{opacity:0.8;}50%{opacity:1;}}
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(-20px);}
+      to{opacity:1;transform:none;}
+    }
+    
+    @keyframes fadeInUp{
+      from{opacity:0;transform:translateY(40px);}
+      to{opacity:1;transform:none;}
+    }
+    
+    @keyframes popIn{
+      0%{transform:scale(0.8);opacity:0;}
+      100%{transform:scale(1);opacity:1;}
+    }
+    
+    @keyframes bounce{
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(-8px);}
+    }
+    
+    @keyframes pulse{
+      0%,100%{opacity:0.8;}
+      50%{opacity:1;}
+    }
+    
+    .debug-menu{
+      position:fixed;
+      top:10px;
+      right:10px;
+      background:rgba(0,0,0,.8);
+      padding:1rem;
+      border-radius:10px;
+      border:2px solid var(--accent1);
+      z-index:1000;
+      display:none;
+    }
+    
+    .debug-menu.visible{
+      display:block;
+    }
+    
+    .debug-btn{
+      background:var(--accent1);
+      color:#000;
+      border:none;
+      padding:.5rem 1rem;
+      border-radius:6px;
+      cursor:pointer;
+      font-family:'Baloo 2',cursive;
+      font-weight:bold;
+      margin:.3rem;
+      transition:transform .2s ease;
+      display:block;
+      width:100%;
+    }
+    
+    .debug-btn:hover{
+      transform:scale(1.05);
+    }
+    
+    .debug-toggle{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      background:var(--accent2);
+      color:#fff;
+      border:none;
+      padding:.7rem 1rem;
+      border-radius:50px;
+      cursor:pointer;
+      font-family:'Baloo 2',cursive;
+      font-weight:bold;
+      z-index:1001;
+      box-shadow:0 4px 15px rgba(0,0,0,.4);
+      transition:transform .2s ease;
+    }
+    
+    .debug-toggle:hover{
+      transform:scale(1.1);
+    }
+    
+    .debug-toggle.hidden{
+      display:none;
+    }
   </style>
 </head>
 <body>
 <canvas id="confetti"></canvas>
+
+<!-- Debug Menu -->
+<button class="debug-toggle" id="debugToggle">🔧 Debug</button>
+<div class="debug-menu" id="debugMenu">
+  <h4 style="color:var(--accent1);margin-bottom:.5rem;">Debug Menu</h4>
+  <button class="debug-btn" id="skipCountdown">⏩ Skip Countdown</button>
+  <button class="debug-btn" id="testOpenBox">🎁 Test Open Box</button>
+</div>
+
 <div class="wrap">
   <header>
     <h1 id="title">Happy Birthday My Love ❤️</h1>
@@ -62,103 +319,232 @@
     <div id="countdown">-- placeholder countdown --</div>
   </header>
 
-  <div class="gift-wrap">
+  <div class="gift-wrap" id="giftWrap">
     <div class="box" id="giftBox">
       <div class="lid"></div>
       <div class="ribbon"></div>
     </div>
+    
     <div class="message" id="message">
       <h3>🎁 Surprise Message</h3>
-      <p>All text replaced with placeholder. Use this section for your surprise reveal — name, message, or memory snippet.</p>
+      <p>Surprise message x.</p>
     </div>
   </div>
 
   <section id="specialDates" class="dates"></section>
-  <div class="scroll-hint">⬇ Scroll to see special moments ⬇</div>
+  
+  <div class="scroll-hint" id="scrollHint">⬇ Scroll to see special moments ⬇</div>
 </div>
 
 <script>
-  const settings={
-    fakeRecipient:{full:"Jamie Rivers",nickname:"Jay",handle:"J.R."},
-    fakeEvents:["First Met","Confession Night","First 'I Love You'","Anniversary"],
-    dateRange:[2019,2026],
-    lorem:'This is placeholder text for the date entry. Replace it with your custom story.'
+  const specialEvents = [
+    {
+      title: "First Met",
+      date: new Date(2025, 3, 20), // April 20, 2025
+      author: "Rayan Ahmed",
+      description: "[special message here]"
+    },
+    {
+      title: "Anniversary",
+      date: new Date(2025, 2, 29), // March 29, 2025
+      author: "Rayan Ahmed",
+      description: "[special message here]"
+    },
+    {
+      title: "", // Leave empty for you to fill
+      date: new Date(2025, 0, 4), // January 4, 2025
+      author: "Rayan Ahmed",
+      description: "" // Leave empty for you to fill
+    }
+  ];
+
+  const settings = {
+    fakeRecipient: {
+      full: "Mastura Rifaya Naomi",
+      nickname: "Rifu",
+      handle: "M.R.N"
+    }
   };
 
-  const countdownEl=document.getElementById('countdown');
-  const giftBox=document.getElementById('giftBox');
-  const message=document.getElementById('message');
-  const datesContainer=document.getElementById('specialDates');
-  const target=new Date(Date.now()+Math.random()*7*24*60*60*1000);
+  const countdownEl = document.getElementById('countdown');
+  const giftBox = document.getElementById('giftBox');
+  const giftWrap = document.getElementById('giftWrap');
+  const message = document.getElementById('message');
+  const datesContainer = document.getElementById('specialDates');
+  const scrollHint = document.getElementById('scrollHint');
+  
+  const target = new Date('2025-10-31T18:00:00Z');
+  let countdownFinished = false;
+  let boxOpened = false;
 
-  function updateCountdown(){
-    const now=new Date();
-    const diff=target-now;
-    if(diff<=0){countdownEl.textContent='🎊 It\'s time!';openBox();return;}
-    const d=Math.floor(diff/86400000),h=Math.floor(diff/3600000)%24,m=Math.floor(diff/60000)%60,s=Math.floor(diff/1000)%60;
-    countdownEl.textContent=`${d}d ${h}h ${m}m ${s}s until celebration`;
+  function updateCountdown() {
+    const now = new Date();
+    const diff = target - now;
+    
+    if (diff <= 0) {
+      countdownEl.textContent = '🎊 It\'s time! Click the gift to open it!';
+      if (!countdownFinished) {
+        countdownFinished = true;
+        giftBox.classList.add('clickable');
+      }
+      return;
+    }
+    
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor(diff / 3600000) % 24;
+    const m = Math.floor(diff / 60000) % 60;
+    const s = Math.floor(diff / 1000) % 60;
+    
+    countdownEl.textContent = `${d}d ${h}h ${m}m ${s}s until celebration`;
   }
-  setInterval(updateCountdown,1000);updateCountdown();
-
-  function createRandomDate(start,end){
-    const y=Math.floor(Math.random()*(end-start+1))+start;
-    const m=Math.floor(Math.random()*12);
-    const d=Math.floor(Math.random()*26)+1;
-    return new Date(y,m,d);
+  
+  function updateEventElapsed(eventDate, elementId) {
+    const now = new Date();
+    const diff = now - eventDate; // Reversed: now minus event date
+    
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    
+    if (diff < 0) {
+      // Event hasn't happened yet
+      element.textContent = '⏳ This moment is still ahead...';
+      return;
+    }
+    
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor(diff / 3600000) % 24;
+    const m = Math.floor(diff / 60000) % 60;
+    const s = Math.floor(diff / 1000) % 60;
+    
+    element.textContent = `💕 ${d} days, ${h} hours, ${m} minutes, ${s} seconds since this special moment`;
   }
+  
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
 
-  function fakeAuthorName(i){
-    const pool=['Alex "Lex" Winters','Riley "Rye" Monroe','Sam "Sammie" Carter','Taylor "Tay" Quinn','Jordan "J" Blaze'];
-    return pool[i%pool.length];
-  }
-
-  function populateSpecialDates(){
-    datesContainer.innerHTML='';
-    settings.fakeEvents.forEach((title,i)=>{
-      const date=createRandomDate(settings.dateRange[0],settings.dateRange[1]);
-      const item=document.createElement('article');
-      item.className='date-item';
-      item.innerHTML=`<h4>${title} <small>[${date.toDateString()}]</small></h4><div class='meta'>By ${fakeAuthorName(i)}</div><div class='desc'>${settings.lorem}</div>`;
+  function populateSpecialDates() {
+    datesContainer.innerHTML = '';
+    
+    specialEvents.forEach((event, index) => {
+      const item = document.createElement('article');
+      item.className = 'date-item';
+      const elapsedId = `event-elapsed-${index}`;
+      
+      // Show title or placeholder
+      const eventTitle = event.title || "[Title Here]";
+      const eventDesc = event.description || "[special message here]";
+      
+      item.innerHTML = `
+        <h4>${eventTitle} <small>[${event.date.toDateString()}]</small></h4>
+        <div class='meta'>By ${event.author}</div>
+        <div class='desc'>${eventDesc}</div>
+        <div class='event-elapsed' id='${elapsedId}'>Loading...</div>
+      `;
       datesContainer.appendChild(item);
+      
+      setInterval(() => updateEventElapsed(event.date, elapsedId), 1000);
+      updateEventElapsed(event.date, elapsedId);
     });
-    const forever=document.createElement('article');
-    forever.className='date-item';
-    forever.innerHTML=`<h4>Forever <small>[Eternal]</small></h4><div class='meta'>By ${settings.fakeRecipient.nickname}</div><div class='desc'>&hellip;forever placeholder message</div>`;
+    
+    const forever = document.createElement('article');
+    forever.className = 'date-item';
+    forever.innerHTML = `
+      <h4>Forever <small>[Eternal]</small></h4>
+      <div class='meta'>For ${settings.fakeRecipient.nickname}</div>
+      <div class='desc'>[special message here]</div>
+    `;
     datesContainer.appendChild(forever);
   }
 
-  function openBox(){
+  function openBox() {
+    if (boxOpened) return;
+    boxOpened = true;
+    
     giftBox.classList.add('open');
     message.classList.add('visible');
-    datesContainer.style.display='block';
-    populateSpecialDates();
-    launchConfetti();
+    
+    setTimeout(() => {
+      datesContainer.classList.add('visible');
+      scrollHint.classList.add('visible');
+      populateSpecialDates();
+      launchConfetti();
+    }, 1000);
   }
 
-  giftBox.addEventListener('click',openBox);
-
-  // Confetti animation
-  function launchConfetti(){
-    const canvas=document.getElementById('confetti');
-    const ctx=canvas.getContext('2d');
-    canvas.width=window.innerWidth;canvas.height=window.innerHeight;
-    const pieces=[];
-    for(let i=0;i<150;i++){
-      pieces.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height*2-canvas.height,r:Math.random()*6+4,c:`hsl(${Math.random()*360},100%,60%)`,s:Math.random()*3+2,a:Math.random()*Math.PI*2});
+  giftBox.addEventListener('click', () => {
+    if (countdownFinished) {
+      openBox();
     }
-    function update(){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      for(let p of pieces){
-        p.y+=p.s;p.x+=Math.sin(p.a);
-        if(p.y>canvas.height)p.y=-10;
-        ctx.beginPath();ctx.fillStyle=p.c;ctx.arc(p.x,p.y,p.r,0,2*Math.PI);ctx.fill();
+  });
+
+  function launchConfetti() {
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const pieces = [];
+    for (let i = 0; i < 150; i++) {
+      pieces.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height * 2 - canvas.height,
+        r: Math.random() * 6 + 4,
+        c: `hsl(${Math.random() * 360},100%,60%)`,
+        s: Math.random() * 3 + 2,
+        a: Math.random() * Math.PI * 2
+      });
+    }
+    
+    function update() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      for (let p of pieces) {
+        p.y += p.s;
+        p.x += Math.sin(p.a);
+        
+        if (p.y > canvas.height) p.y = -10;
+        
+        ctx.beginPath();
+        ctx.fillStyle = p.c;
+        ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+        ctx.fill();
       }
+      
       requestAnimationFrame(update);
     }
+    
     update();
   }
+  
+  // ==================== DEBUG MENU ====================
+  const debugToggle = document.getElementById('debugToggle');
+  const debugMenu = document.getElementById('debugMenu');
+  const skipCountdownBtn = document.getElementById('skipCountdown');
+  const testOpenBoxBtn = document.getElementById('testOpenBox');
 
-  setTimeout(()=>{if(!giftBox.classList.contains('open'))openBox();},1200);
+  // Toggle debug menu visibility
+  debugToggle.addEventListener('click', () => {
+    debugMenu.classList.toggle('visible');
+  });
+  
+  // Skip countdown - makes gift box clickable immediately
+  skipCountdownBtn.addEventListener('click', () => {
+    countdownFinished = true;
+    giftBox.classList.add('clickable');
+    countdownEl.textContent = '🎊 It\'s time! Click the gift to open it!';
+    alert('Countdown skipped! Gift box is now clickable.');
+  });
+  
+  // Test open box - opens the box immediately
+  testOpenBoxBtn.addEventListener('click', () => {
+    if (!countdownFinished) {
+      countdownFinished = true;
+      giftBox.classList.add('clickable');
+    }
+    openBox();
+    alert('Box opened for testing!');
+  });
 </script>
 </body>
 </html>
